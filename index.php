@@ -31,7 +31,7 @@ else{
 	")->fetch_row()[0])
 		Header('Location:?op=refresh');
 }
-if(isset($_GET['api'])){
+if(isset($_GET['api']) and isset($_GET['voto']) and $_GET['voto']>0 ){
 	$r=$conn->query("
 		UPDATE sondeos set voto=".($_GET['voto']*1)."
 		  WHERE id_sondeo=".$_SESSION['id_sondeo'].";
@@ -70,6 +70,7 @@ async function refreshing(){
 	let participacion=document.getElementById('participacion');
 	resultado.innerHTML=r[0];
 	participacion.innerHTML=r[1];
+	if(r[1]==0) colorea(0);
 }
 async function colorea(valor){
 	for(i=0;i<valor;i++){
