@@ -2,13 +2,14 @@
 session_start();
 if(isset($_GET['op']) and $_GET['op']=='logout'){ session_destroy();unset($_SESSION);Header('Location:admin.php');}
 if(!isset($_SESSION['sondeos_adm'])){
-	if(isset($_POST['contrasena']) and $_POST['contrasena']=='hola')
+	include 'passwd.php';
+	if(isset($_POST['contrasena']) and $_POST['contrasena']==$passwd)
 		$_SESSION['sondeos_adm']=1;
 	else{
 		echo '
 			<form method="post" style="
 				text-align:center;
-				margin:10px;			
+				margin:10px;
 			">
 				<input name="usuario" autofocus>
 				<input name="contrasena" type="password">
@@ -19,6 +20,27 @@ if(!isset($_SESSION['sondeos_adm'])){
 	}
 }
 include "conn.php";
+if(1){	// inicialización de datos
+	$conn->query("
+		CREATE TABLE if NOT EXISTS sondeos(
+		  id_sondeo int AUTO_INCREMENT PRIMARY KEY,
+		  voto bool,
+		  instante datetime
+		  );
+	");
+	$conn->query("
+		CREATE TABLE if NOT EXISTS sondeos_ops(
+		  id_opcion int AUTO_INCREMENT PRIMARY KEY,
+		  opcion varchar(31),
+		  valor varchar(31),
+		  UNIQUE(opcion)
+		  );
+	");
+	$conn->query("
+		INSERT INTO sondeos_ops (opcion, valor) VALUES
+		  ('n_participantes',2);
+	");
+}
 if(isset($_POST['n_participantes'])){
 	$conn->query("
 		UPDATE sondeos_ops set valor=".($_POST['n_participantes'])."
@@ -28,7 +50,7 @@ if(isset($_POST['n_participantes'])){
 }
 $n_participantes=$conn->query("
 	SELECT valor FROM sondeos_ops
-	  WHERE opcion='n_participantes';	
+	  WHERE opcion='n_participantes';
 ")->fetch_row()[0];
 $r=$conn->query("SELECT * FROM sondeos;")->fetch_all(MYSQLI_ASSOC);
 ?>
