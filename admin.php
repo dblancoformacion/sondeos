@@ -52,7 +52,8 @@ $n_participantes=$conn->query("
 	SELECT valor FROM sondeos_ops
 	  WHERE opcion='n_participantes';
 ")->fetch_row()[0];
-$r=$conn->query("SELECT * FROM sondeos;")->fetch_all(MYSQLI_ASSOC);
+$rs=$conn->query("SELECT * FROM sondeos;");
+while($i=$rs->fetch_assoc()) $r[]=$i;
 ?>
 <!doctype html>
 <html>

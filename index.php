@@ -61,7 +61,7 @@ function inicio(){
 			colorea(valor);
 		});
 	}
-	var timer = setInterval(refreshing, 2e3);
+	var timer = setInterval(refreshing, 5e3);
 }
 async function refreshing(){
 	let url = '?api_anonima=1';	
@@ -83,6 +83,7 @@ async function colorea(valor){
 	}
 	let url = '?api=1&voto='+valor;	
 	let ps = await (await fetch(url,{mode:"no-cors"})).json();
+	refreshing();
 }
 </script>
 <style>
